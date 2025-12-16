@@ -1,0 +1,139 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool: TerraPulse agent
+
+stages:
+  - stage: stage1
+    displayName: install_init_fmt_validate 
+    jobs:
+      - job: terraoforminstall_terraforminit
+        displayName: terraform_install_init
+        steps:
+        - task: TerraformInstaller@1
+          displayName: terraform install
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
+            backendServiceArm: 'Ajay Service-connection_Nov'
+            backendAzureRmOverrideSubscriptionID: 'c0748677-9808-4356-8816-dc8088c5bb59'
+            backendAzureRmResourceGroupName: 'ajay_nov01'
+            backendAzureRmStorageAccountName: 'ajaystg09'
+            backendAzureRmContainerName: 'ajaycont'
+            backendAzureRmKey: 'ajay.tfstate'
+      - job: terraformfmt_terrraformvalidate
+        displayName: terraform fmt and validate
+        dependsOn: terraoforminstall_terraforminit
+        steps:
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: 'Ajay Service-connection_Nov'
+            backendAzureRmOverrideSubscriptionID: 'c0748677-9808-4356-8816-dc8088c5bb59'
+            backendAzureRmResourceGroupName: 'ajay_nov01'
+            backendAzureRmStorageAccountName: 'ajaystg09'
+            backendAzureRmContainerName: 'ajaycont'
+            backendAzureRmKey: 'ajay.tfstate'
+        - task: TerraformTask@5
+          displayName: terraform fmt
+          inputs:
+            provider: 'azurerm'
+            command: 'custom'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
+            commandOptions: 'fmt'
+            outputTo: 'console'
+            environmentServiceNameAzureRM: 'Ajay Service-connection_Nov'
+        - task: TerraformTask@5
+          displayName: terraform fmt
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
+  - stage: stage2
+    displayName: Security_scanning
+    dependsOn: stage1
+    jobs:
+      - job: terraform_scanning
+        displayName: "Terraform Security Scanning"
+        steps:
+        - task: tfsec@1
+          displayName: Security Scanning
+          inputs:
+            version: 'v1.26.0'
+            dir: '$(System.DefaultWorkingDirectory)'
+  - stage: stage3
+    displayName: manualValidation
+    dependsOn: stage2
+    jobs:
+      - job: manual_validation
+        displayName: manual validation
+        pool: server
+        steps:
+        - task: ManualValidation@1
+          inputs:
+            notifyUsers: 'Ajay'
+            instructions: 'check and approve'
+  - stage: stage4
+    displayName: terraformPlan_terraformApply
+    dependsOn: stage3
+    jobs:
+      - job: terraform_plan
+        displayName: terraform Plan
+        steps:
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: 'Ajay Service-connection_Nov'
+            backendAzureRmOverrideSubscriptionID: 'c0748677-9808-4356-8816-dc8088c5bb59'
+            backendAzureRmResourceGroupName: 'ajay_nov01'
+            backendAzureRmStorageAccountName: 'ajaystg09'
+            backendAzureRmContainerName: 'ajaycont'
+            backendAzureRmKey: 'ajay.tfstate'
+        - task: TerraformTask@5
+          displayName: terraform plan
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
+            environmentServiceNameAzureRM: 'Ajay Service-connection_Nov'
+      - job: terraform_apply
+        displayName: terraformApply
+        dependsOn: terraform_plan
+        steps:
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: 'Ajay Service-connection_Nov'
+            backendAzureRmOverrideSubscriptionID: 'c0748677-9808-4356-8816-dc8088c5bb59'
+            backendAzureRmResourceGroupName: 'ajay_nov01'
+            backendAzureRmStorageAccountName: 'ajaystg09'
+            backendAzureRmContainerName: 'ajaycont'
+            backendAzureRmKey: 'ajay.tfstate'
+        - task: TerraformTask@5
+          displayName: terraform apply
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
+            environmentServiceNameAzureRM: 'Ajay Service-connection_Nov'
+
+
