@@ -64,7 +64,7 @@ stages:
 
   - stage: stage2
     displayName: Security_scanning
-    dependsOn: stage1
+    # dependsOn: stage1
     jobs:
       - job: terraform_scanning
         displayName: "Terraform Security Scanning"
@@ -83,18 +83,45 @@ stages:
               tflint
             workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-  # - stage: stage3
-  #   displayName: manualValidation
-  #   dependsOn: stage2
-  #   jobs:
-  #     - job: manual_validation
-  #       displayName: manual validation
-  #       pool: server
-  #       steps:
-  #       - task: ManualValidation@1
-  #         inputs:
-  #           notifyUsers: 'Ajay'
-  #           instructions: 'check and approve'
+  - stage: stage3
+    displayName: terraform plan
+    # dependsOn:stage2
+    jobs:
+      - job: terraform_plan
+        displayName: terraform plan
+        steps:
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: 'Ajay_Dec_ServiceConnection'
+            backendAzureRmOverrideSubscriptionID: '009fad33-c09c-4841-af38-57dd79870d40'
+            backendAzureRmResourceGroupName: 'ajayrgtfstate'
+            backendAzureRmStorageAccountName: 'ajaystgtfstate'
+            backendAzureRmContainerName: 'ajaycontainer'
+            backendAzureRmKey: 'ajay.tfstate'
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: 'Ajay_Dec_ServiceConnection'
+
+  - stage: stage4
+    displayName: manualValidation
+    # dependsOn: stage3
+    jobs:
+      - job: manual_validation
+        displayName: manual validation
+        pool: server
+        steps:
+        - task: ManualValidation@1
+          inputs:
+            notifyUsers: 'Ajay'
+            instructions: 'check and approve'
 
   # # - stage: stage4
   #   displayName: terraformPlan_terraformApply
