@@ -15,7 +15,7 @@ rgs = {
 
 storage_account = {
   "stg1" = {
-    name                     = "ajaystg123"
+    name                     = "ajaystg1234"
     resource_group_name      = "ajay1122"
     location                 = "Central India"
     account_tier             = "Standard"
@@ -149,7 +149,7 @@ vm = {
     disable_password_authentication = "false"
     size                            = "Standard_B1s"
     nic_name                        = "frontend_nic"
-    kv_name                         = "ajay09New"
+    kv_name                         = "ajayNew01"
     secret_name                     = "vmuser"
     secret_password                 = "vmpassword"
 
@@ -175,7 +175,7 @@ vm = {
     disable_password_authentication = "false"
     size                            = "Standard_B1s"
     nic_name                        = "backend_nic"
-    kv_name                         = "ajay09New"
+    kv_name                         = "ajayNew01"
     secret_name                     = "vmuser"
     secret_password                 = "vmpassword"
 
@@ -195,7 +195,7 @@ vm = {
 
 keyvault = {
   "kv1" = {
-    kv_name                     = "ajay09New"
+    kv_name                     = "ajayNew01"
     resource_group_name         = "ajay1122"
     location                    = "Central India"
     enabled_for_disk_encryption = true
@@ -221,7 +221,7 @@ sql_servers = {
     secret_password       = "vmpassword"
     secret_user_value     = "sqladminuser"
     secret_password_value = "SqlPassword@12345"
-    kv_name               = "ajay09New"
+    kv_name               = "ajayNew01"
 
 
   }
