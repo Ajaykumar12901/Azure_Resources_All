@@ -104,10 +104,11 @@ stages:
             backendAzureRmContainerName: 'ajaycontainer'
             backendAzureRmKey: 'ajay.tfstate'
         - task: TerraformTask@5
-          displayName: terraform init
+          displayName: terraform plan
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
             environmentServiceNameAzureRM: 'Ajay_Dec_ServiceConnection'
 
   - stage: stage4
