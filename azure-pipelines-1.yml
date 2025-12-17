@@ -80,7 +80,7 @@ stages:
             targetType: 'inline'
             script: |
               tflint --init
-              tflint .
+              tflint
             workingDirectory: '$(System.DefaultWorkingDirectory)'
 
   # - stage: stage3
