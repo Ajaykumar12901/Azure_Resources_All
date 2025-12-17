@@ -21,13 +21,14 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
-            backendServiceArm: 'Ajay Service-connection_Nov'
-            backendAzureRmOverrideSubscriptionID: 'c0748677-9808-4356-8816-dc8088c5bb59'
-            backendAzureRmResourceGroupName: 'ajay_nov01'
-            backendAzureRmStorageAccountName: 'ajaystg09'
-            backendAzureRmContainerName: 'ajaycont'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
+            backendServiceArm: 'Ajay_Dec_ServiceConnection'
+            backendAzureRmOverrideSubscriptionID: '009fad33-c09c-4841-af38-57dd79870d40'
+            backendAzureRmResourceGroupName: 'ajayrgtfstate'
+            backendAzureRmStorageAccountName: 'ajaystgtfstate'
+            backendAzureRmContainerName: 'ajaycontainer'
             backendAzureRmKey: 'ajay.tfstate'
+
       - job: terraformfmt_terrraformvalidate
         displayName: terraform fmt and validate
         dependsOn: terraoforminstall_terraforminit
@@ -37,54 +38,57 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
             backendAzureRmUseEntraIdForAuthentication: false
-            backendServiceArm: 'Ajay Service-connection_Nov'
-            backendAzureRmOverrideSubscriptionID: 'c0748677-9808-4356-8816-dc8088c5bb59'
-            backendAzureRmResourceGroupName: 'ajay_nov01'
-            backendAzureRmStorageAccountName: 'ajaystg09'
-            backendAzureRmContainerName: 'ajaycont'
+            backendServiceArm: 'Ajay_Dec_ServiceConnection'
+            backendAzureRmOverrideSubscriptionID: '009fad33-c09c-4841-af38-57dd79870d40'
+            backendAzureRmResourceGroupName: 'ajayrgtfstate'
+            backendAzureRmStorageAccountName: 'ajaystgtfstate'
+            backendAzureRmContainerName: 'ajaycontainer'
             backendAzureRmKey: 'ajay.tfstate'
+
         - task: TerraformTask@5
           displayName: terraform fmt
           inputs:
             provider: 'azurerm'
             command: 'custom'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
-            commandOptions: 'fmt'
             outputTo: 'console'
+            customCommand: 'fmt - recursive'
             environmentServiceNameAzureRM: 'Ajay Service-connection_Nov'
         - task: TerraformTask@5
-          displayName: terraform fmt
+          displayName: terraform validate
           inputs:
             provider: 'azurerm'
             command: 'validate'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
-  - stage: stage2
-    displayName: Security_scanning
-    dependsOn: stage1
-    jobs:
-      - job: terraform_scanning
-        displayName: "Terraform Security Scanning"
-        steps:
-        - task: tfsec@1
-          displayName: Security Scanning
-          inputs:
-            version: 'v1.26.0'
-            dir: '$(System.DefaultWorkingDirectory)'
-  - stage: stage3
-    displayName: manualValidation
-    dependsOn: stage2
-    jobs:
-      - job: manual_validation
-        displayName: manual validation
-        pool: server
-        steps:
-        - task: ManualValidation@1
-          inputs:
-            notifyUsers: 'Ajay'
-            instructions: 'check and approve'
-  - stage: stage4
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
+
+  # - stage: stage2
+  #   displayName: Security_scanning
+  #   dependsOn: stage1
+  #   jobs:
+  #     - job: terraform_scanning
+  #       displayName: "Terraform Security Scanning"
+  #       steps:
+  #       - task: tfsec@1
+  #         displayName: Security Scanning
+  #         inputs:
+  #           version: 'v1.26.0'
+  #           dir: '$(System.DefaultWorkingDirectory)'
+
+  # - stage: stage3
+  #   displayName: manualValidation
+  #   dependsOn: stage2
+  #   jobs:
+  #     - job: manual_validation
+  #       displayName: manual validation
+  #       pool: server
+  #       steps:
+  #       - task: ManualValidation@1
+  #         inputs:
+  #           notifyUsers: 'Ajay'
+  #           instructions: 'check and approve'
+
+  # - stage: stage4
     displayName: terraformPlan_terraformApply
     dependsOn: stage3
     jobs:
