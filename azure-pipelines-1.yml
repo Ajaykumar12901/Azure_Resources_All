@@ -62,18 +62,26 @@ stages:
             command: 'validate'
             workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
 
-  # - stage: stage2
-  #   displayName: Security_scanning
-  #   dependsOn: stage1
-  #   jobs:
-  #     - job: terraform_scanning
-  #       displayName: "Terraform Security Scanning"
-  #       steps:
-  #       - task: tfsec@1
-  #         displayName: Security Scanning
-  #         inputs:
-  #           version: 'v1.26.0'
-  #           dir: '$(System.DefaultWorkingDirectory)'
+  - stage: stage2
+    displayName: Security_scanning
+    dependsOn: stage1
+    jobs:
+      - job: terraform_scanning
+        displayName: "Terraform Security Scanning"
+        steps:
+        - task: tfsec@1
+          displayName: Security Scanning
+          inputs:
+            version: 'v1.26.0'
+            dir: '$(System.DefaultWorkingDirectory)'
+        
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            script: |
+              tflint --init
+              tflint .
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
 
   # - stage: stage3
   #   displayName: manualValidation
