@@ -151,5 +151,6 @@ stages:
             command: 'apply'
             workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/dev/'
             environmentServiceNameAzureRM: 'Ajay_Dec_ServiceConnection'
+            environmentAzureRmOverrideSubscriptionID: '009fad33-c09c-4841-af38-57dd79870d40'
 
 
