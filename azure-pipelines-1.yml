@@ -53,7 +53,7 @@ stages:
             provider: 'azurerm'
             command: 'custom'
             outputTo: 'console'
-            customCommand: 'fmt - recursive'
+            customCommand: 'fmt -recursive'
             environmentServiceNameAzureRM: 'Ajay Service-connection_Nov'
         - task: TerraformTask@5
           displayName: terraform validate
