@@ -107,7 +107,6 @@ stages:
               go get github.com/gruntwork-io/terratest/modules/files@v0.46.16
               go mod tidy
               go test -v
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
 
   # - stage: stage3
   #   displayName: terraform plan
