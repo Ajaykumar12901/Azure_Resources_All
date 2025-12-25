@@ -46,7 +46,7 @@ stages:
             backendAzureRmStorageAccountName: 'ajaystgtfstate'
             backendAzureRmContainerName: 'ajaycontainer'
             backendAzureRmKey: 'ajay.tfstate'
-
+        
         - task: TerraformTask@5
           displayName: terraform fmt
           inputs:
@@ -97,6 +97,21 @@ stages:
             targetType: 'inline'
             script: 'checkov -d .'
             workingDirectory: '$(System.DefaultWorkingDirectory)'
+        # - task: Go@0
+        #   inputs:
+        #     command: 'custom'
+        #     customCommand: 'go mod init "testdev" go mod tidy go get github.com/gruntwork-io/terratest/modules/files@v0.46.16 go mod tidy go test -v'
+        #     workingDirectory: '$(System.DefaultWorkingDirectory)/test'
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            script: |
+              go mod init "testdev"
+              go mod tidy
+              go get github.com/gruntwork-io/terratest/modules/files@v0.46.16
+              go mod tidy
+              go test -v
+            workingDirectory: '$(System.DefaultWorkingDirectory)/test'
 
   # - stage: stage3
   #   displayName: terraform plan
