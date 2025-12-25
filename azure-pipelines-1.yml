@@ -6,61 +6,61 @@ trigger:
 pool: TerraPulse agent
 
 stages:
-  - stage: stage1
-    displayName: install_init_fmt_validate 
-    jobs:
-      - job: terraoforminstall_terraforminit
-        displayName: terraform_install_init
-        steps:
-        - task: TerraformInstaller@1
-          displayName: terraform install
-          inputs:
-            terraformVersion: 'latest'
-        - task: TerraformTask@5
-          displayName: terraform init
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
-            backendServiceArm: 'Ajay_Dec_ServiceConnection'
-            backendAzureRmOverrideSubscriptionID: '009fad33-c09c-4841-af38-57dd79870d40'
-            backendAzureRmResourceGroupName: 'ajayrgtfstate'
-            backendAzureRmStorageAccountName: 'ajaystgtfstate'
-            backendAzureRmContainerName: 'ajaycontainer'
-            backendAzureRmKey: 'ajay.tfstate'
+  # - stage: stage1
+  #   displayName: install_init_fmt_validate 
+  #   jobs:
+  #     - job: terraoforminstall_terraforminit
+  #       displayName: terraform_install_init
+  #       steps:
+  #       - task: TerraformInstaller@1
+  #         displayName: terraform install
+  #         inputs:
+  #           terraformVersion: 'latest'
+  #       - task: TerraformTask@5
+  #         displayName: terraform init
+  #         inputs:
+  #           provider: 'azurerm'
+  #           command: 'init'
+  #           workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
+  #           backendServiceArm: 'Ajay_Dec_ServiceConnection'
+  #           backendAzureRmOverrideSubscriptionID: '009fad33-c09c-4841-af38-57dd79870d40'
+  #           backendAzureRmResourceGroupName: 'ajayrgtfstate'
+  #           backendAzureRmStorageAccountName: 'ajaystgtfstate'
+  #           backendAzureRmContainerName: 'ajaycontainer'
+  #           backendAzureRmKey: 'ajay.tfstate'
 
-      - job: terraformfmt_terrraformvalidate
-        displayName: terraform fmt and validate
-        dependsOn: terraoforminstall_terraforminit
-        steps:
-        - task: TerraformTask@5
-          displayName: terraform init
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
-            backendAzureRmUseEntraIdForAuthentication: false
-            backendServiceArm: 'Ajay_Dec_ServiceConnection'
-            backendAzureRmOverrideSubscriptionID: '009fad33-c09c-4841-af38-57dd79870d40'
-            backendAzureRmResourceGroupName: 'ajayrgtfstate'
-            backendAzureRmStorageAccountName: 'ajaystgtfstate'
-            backendAzureRmContainerName: 'ajaycontainer'
-            backendAzureRmKey: 'ajay.tfstate'
+  #     - job: terraformfmt_terrraformvalidate
+  #       displayName: terraform fmt and validate
+  #       dependsOn: terraoforminstall_terraforminit
+  #       steps:
+  #       - task: TerraformTask@5
+  #         displayName: terraform init
+  #         inputs:
+  #           provider: 'azurerm'
+  #           command: 'init'
+  #           workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
+  #           backendAzureRmUseEntraIdForAuthentication: false
+  #           backendServiceArm: 'Ajay_Dec_ServiceConnection'
+  #           backendAzureRmOverrideSubscriptionID: '009fad33-c09c-4841-af38-57dd79870d40'
+  #           backendAzureRmResourceGroupName: 'ajayrgtfstate'
+  #           backendAzureRmStorageAccountName: 'ajaystgtfstate'
+  #           backendAzureRmContainerName: 'ajaycontainer'
+  #           backendAzureRmKey: 'ajay.tfstate'
         
-        - task: TerraformTask@5
-          displayName: terraform fmt
-          inputs:
-            provider: 'azurerm'
-            command: 'custom'
-            commandOptions: 'fmt -recursive'
-            outputTo: 'console'
-            environmentServiceNameAzureRM: 'Ajay_Dec_ServiceConnection'
-        - task: TerraformTask@5
-          displayName: terraform validate
-          inputs:
-            provider: 'azurerm'
-            command: 'validate'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
+  #       - task: TerraformTask@5
+  #         displayName: terraform fmt
+  #         inputs:
+  #           provider: 'azurerm'
+  #           command: 'custom'
+  #           commandOptions: 'fmt -recursive'
+  #           outputTo: 'console'
+  #           environmentServiceNameAzureRM: 'Ajay_Dec_ServiceConnection'
+  #       - task: TerraformTask@5
+  #         displayName: terraform validate
+  #         inputs:
+  #           provider: 'azurerm'
+  #           command: 'validate'
+  #           workingDirectory: '$(System.DefaultWorkingDirectory)/Envoirnment/Dev/'
 
   - stage: stage2
     displayName: Security_scanning
@@ -106,12 +106,13 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
+              cd /test
               go mod init "testdev"
               go mod tidy
               go get github.com/gruntwork-io/terratest/modules/files@v0.46.16
               go mod tidy
               go test -v
-            workingDirectory: '$(System.DefaultWorkingDirectory)/test'
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
 
   # - stage: stage3
   #   displayName: terraform plan
