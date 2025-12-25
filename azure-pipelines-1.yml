@@ -97,16 +97,11 @@ stages:
             targetType: 'inline'
             script: 'checkov -d .'
             workingDirectory: '$(System.DefaultWorkingDirectory)'
-        # - task: Go@0
-        #   inputs:
-        #     command: 'custom'
-        #     customCommand: 'go mod init "testdev" go mod tidy go get github.com/gruntwork-io/terratest/modules/files@v0.46.16 go mod tidy go test -v'
-        #     workingDirectory: '$(System.DefaultWorkingDirectory)/test'
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
             script: |
-              cd /test
+              cd test
               go mod init "testdev"
               go mod tidy
               go get github.com/gruntwork-io/terratest/modules/files@v0.46.16
