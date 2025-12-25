@@ -7,13 +7,13 @@ data "azurerm_key_vault" "kv" {
   
 data "azurerm_key_vault_secret" "servername"{
   for_each = var.sql_servers
-  name = each.value.secret_name
+  name = each.value.sql_user
   key_vault_id = data.azurerm_key_vault.kv[each.key].id
 
 }
 
 data "azurerm_key_vault_secret" "serverpassword" {
   for_each = var.sql_servers
-  name = each.value.secret_password
+  name = each.value.sql_password
   key_vault_id= data.azurerm_key_vault.kv[each.key].id
 }

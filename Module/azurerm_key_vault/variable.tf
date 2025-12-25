@@ -8,10 +8,10 @@ variable "keyvault" {
     sku_name                    = string
     soft_delete_retention_days  = optional(number)
     purge_protection_enabled    = optional(bool)
-    secret_name                 = string
-    secret_password             = string
-    secret_user_value           = string
-    secret_password_value       = string
+    # secret_name                 = string
+    # secret_password             = string
+    # secret_user_value           = string
+    # secret_password_value       = string
     # rbac_authorization          = optional(bool)
   }))
 }

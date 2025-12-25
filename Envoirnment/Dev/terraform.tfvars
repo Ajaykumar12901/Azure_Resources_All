@@ -10,7 +10,7 @@ rgs = {
       enviornment = "dev"
     }
   }
-  
+
 }
 
 storage_account = {
@@ -20,7 +20,7 @@ storage_account = {
     location                 = "Central India"
     account_tier             = "Standard"
     account_replication_type = "LRS"
-  
+
   }
 }
 
@@ -64,7 +64,7 @@ nerwork_security_group = {
         access                     = "Allow"
         protocol                   = "Tcp"
         source_port_range          = "*"
-        destination_port_ranges    = ["80", "8080", "10000-10010"] 
+        destination_port_ranges    = ["80", "8080", "10000-10010"]
         source_address_prefix      = "*"
         destination_address_prefix = "*"
       }
@@ -147,10 +147,10 @@ vm = {
     # admin_username                  = "adminuser"
     # admin_password                  = "Ajay@123456789"
     disable_password_authentication = "false"
-    size                            = "Standard_B1s"
+    size                            = "Standard_D2s_v3"
     nic_name                        = "frontend_nic"
-    kv_name                         = "ajayNew01"
-    secret_name                     = "vmuser"
+    kv_name                         = "ajay09kv02"
+    secret_name                     = "vmusername"
     secret_password                 = "vmpassword"
 
 
@@ -173,10 +173,10 @@ vm = {
     # admin_username                  = "adminuser"
     # admin_password                  = "Ajay@123456789"
     disable_password_authentication = "false"
-    size                            = "Standard_B1s"
+    size                            = "Standard_D2s_v3"
     nic_name                        = "backend_nic"
-    kv_name                         = "ajayNew01"
-    secret_name                     = "vmuser"
+    kv_name                         = "ajay09kv02"
+    secret_name                     = "vmusername"
     secret_password                 = "vmpassword"
 
     os_disk = {
@@ -195,35 +195,53 @@ vm = {
 
 keyvault = {
   "kv1" = {
-    kv_name                     = "ajayNew01"
+    kv_name                     = "ajay09kv02"
     resource_group_name         = "ajay1122"
     location                    = "Central India"
     enabled_for_disk_encryption = true
     sku_name                    = "standard"
     soft_delete_enabled         = 7
     purge_protection_enabled    = false
-    secret_name                 = "vmuser"
-    secret_user_value           = "adminuser"
-    secret_password             = "vmpassword"
-    secret_password_value       = "Password@12345"
-
-
   }
 }
 
+kvs = {
+  "secret1" = {
+    kv_name             = "ajay09kv02"
+    resource_group_name = "ajay1122"
+    secret_name         = "vmusername"
+    secret_value        = "adminuser"
+  }
+  "secret2" = {
+    kv_name             = "ajay09kv02"
+    resource_group_name = "ajay1122"
+    secret_name         = "vmpassword"
+    secret_value        = "Password@123456"
+  }
+  "secret3" = {
+    kv_name             = "ajay09kv02"
+    resource_group_name = "ajay1122"
+    secret_name         = "sqlservername"
+    secret_value        = "sqladminsuer"
+  }
+  "secret4" = {
+    kv_name             = "ajay09kv02"
+    resource_group_name = "ajay1122"
+    secret_name         = "sqlserverpassword"
+    secret_value        = "Password@123456"
+  }
+}
+
+
 sql_servers = {
   "server1" = {
-    server_name           = "ajayserver02"
-    resource_group_name   = "ajay1122"
-    location              = "Central India"
-    version               = "12.0"
-    secret_name           = "vmuser"
-    secret_password       = "vmpassword"
-    secret_user_value     = "sqladminuser"
-    secret_password_value = "SqlPassword@12345"
-    kv_name               = "ajayNew01"
-
-
+    server_name         = "ajayserver02"
+    resource_group_name = "ajay1122"
+    location            = "Central India"
+    version             = "12.0"
+    sql_user         = "sqlservername"
+    sql_password        = "sqlserverpassword"
+    kv_name             = "ajay09kv02"
   }
 }
 

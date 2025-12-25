@@ -15,7 +15,6 @@ data "azurerm_key_vault_secret" "vmusername"{
   for_each = var.vm
   name = each.value.secret_name
   key_vault_id = data.azurerm_key_vault.kv[each.key].id
-
 }
 
 data "azurerm_key_vault_secret" "vmpassword" {

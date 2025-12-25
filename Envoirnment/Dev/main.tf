@@ -55,6 +55,13 @@ module "kv" {
 
 }
 
+module "kvs" {
+  depends_on = [ module.kv , module.rg]
+  source = "../../Module/azurerm_key_vault_secret"
+  kvs = var.kvs
+  
+}
+
 module "sqlserver" {
   depends_on = [ module.kv, module.rg ]
   source = "../../Module/azurerm_sql_server"

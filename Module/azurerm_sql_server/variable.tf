@@ -10,10 +10,8 @@ variable "sql_servers" {
     minimum_tls_version           = optional(string)
     public_network_access_enabled = optional(bool)
     tags                          = optional(map(string))
-    secret_name                   = string
-    secret_password               = string
-    secret_user_value             = string
-    secret_password_value         = string
+    sql_user                      = string
+    sql_password                  = string
     kv_name                       = string
 
 
